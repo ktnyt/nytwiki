@@ -16,11 +16,11 @@ class Page extends Component {
   }
 
   static contextTypes = {
-    backend: PropTypes.object,
+    wiki: PropTypes.object,
   }
 
   static childContextTypes = {
-    backend: PropTypes.object.isRequired,
+    wiki: PropTypes.object.isRequired,
   }
 
   getChildContext = () => {
@@ -30,7 +30,6 @@ class Page extends Component {
   }
 
   componentWillMount = () => {
-    this.context.backend.pages()
     this.setup(this.props, this.context)
   }
 
@@ -40,9 +39,9 @@ class Page extends Component {
 
   setup = (props, context) => {
     const { path } = props
-    const { backend } = context
+    const { wiki } = context
 
-    backend.get(path).then(([contents, metadata]) => {
+    wiki.handlers.read(path).then(([contents, metadata]) => {
       this.setState({ contents, metadata })
     }, error => {
       this.setState({ error })
@@ -51,10 +50,10 @@ class Page extends Component {
 
   update = (contents, metadata) => {
     const { path } = this.props
-    const { backend } = this.context
+    const { wiki } = this.context
 
-    backend.put(path, contents, metadata).then(() => {
-      backend.get(path).then(([contents, metadata]) => {
+    return wiki.handlers.update(path, contents, metadata).then(() => {
+      return wiki.handlers.read(path).then(([contents, metadata]) => {
         this.setState({ contents, metadata })
       }, error => {
         this.setState({ error })
@@ -64,9 +63,15 @@ class Page extends Component {
     })
   }
 
+  delete = () => {
+    const { path } = this.props
+    const { wiki } = this.context
+
+    return wiki.handlers.delete(path)
+  }
+
   render = () => {
     const { contents, metadata, error } = this.state
-    const { update } = this
 
     // TODO: Add comprehensive error handling
     return is.not.undefined(error) ? (
@@ -86,7 +91,12 @@ class Page extends Component {
     ) : (
       React.createElement(
         templates[metadata.template],
-        { metadata, contents, update },
+        {
+          metadata,
+          contents,
+          update: this.update,
+          delete: this.delete,
+        },
         null,
       )
     )

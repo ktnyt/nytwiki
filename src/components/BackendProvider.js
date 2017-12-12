@@ -2,7 +2,36 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 class BackendProvider extends Component {
-  state = { backend: false }
+  state = { ready: false, index: false }
+
+  handlers = {
+    create: (path, contents, metadata) => {
+      const { backend } = this.props
+
+      return backend.create(path, contents, metadata)
+      .then(() => backend.list().then(index => this.setState({ index })))
+    },
+
+    read: path => {
+      const { backend } = this.props
+
+      return backend.read(path)
+    },
+
+    update: (path, contents, metadata) => {
+      const { backend } = this.props
+      
+      return backend.update(path, contents, metadata)
+      .then(() => backend.list().then(index => this.setState({ index })))
+    },
+
+    delete: path => {
+      const { backend } = this.props
+
+      return backend.delete(path)
+      .then(() => backend.list().then(index => this.setState({ index })))
+    }
+  }
 
   static propTypes = {
     backend: PropTypes.object.isRequired,
@@ -10,27 +39,36 @@ class BackendProvider extends Component {
   }
 
   static contextTypes = {
-    backend: PropTypes.object,
+    wiki: PropTypes.object,
   }
 
   static childContextTypes = {
-    backend: PropTypes.object.isRequired,
+    wiki: PropTypes.object.isRequired,
   }
 
   getChildContext = () => {
-    const { backend } = this.props
+    const handlers = this.handlers
+    const { ready, index } = this.state
+
     return {
       ...this.context,
-      backend,
+      wiki: {
+        ready,
+        index,
+        handlers,
+      },
     }
   }
 
   componentWillMount = () => {
-    this.props.backend.ready.then(backend => this.setState({ backend }), console.error)
+    this.props.backend.onReady(backend => {
+      backend.list().then(index => this.setState({ index }))
+      this.setState({ ready: true })
+    })
   }
 
   render = () => {
-    return this.state.backend ? React.Children.only(this.props.children) : null
+    return this.state.ready ? React.Children.only(this.props.children) : null
   }
 }
 

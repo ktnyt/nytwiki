@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk'
+import _ from 'lodash'
 
 const metadataDefaults = {
   template: 'Default',
@@ -27,18 +28,21 @@ class S3Backend {
           }
         })
 
-        this.get().catch(error => {
-          this.put('', {
+        this.read().then(() => resolve(this), error => {
+          this.create('', {
+            title: 'Home',
             template: 'Home',
-          }).catch(reject)
+          }).then(() => resolve(this), reject)
         })
-
-        resolve(this)
       })
     })
   }
 
-  get = path => {
+  onReady = f => this.ready.then(f)
+
+  create = this.update
+
+  read = path => {
     const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
     const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
 
@@ -46,27 +50,26 @@ class S3Backend {
       this.s3.getObject({ Key: contentsPath }).promise()
       .then(object => object.Body.toString()),
       this.s3.getObject({ Key: metadataPath }).promise()
-      .then(object => object.Body.toString())
-      .then(string => JSON.parse(string)),
+      .then(object => JSON.parse(object.Body.toString())),
     ])
   }
 
-  add = this.put
-
-  put = (path, contents, metadata) => {
+  update = (path, contents, metadata) => {
     if(!metadata) {
       metadata = contents
       contents = path
-      path = ''
+      path = '/'
     }
 
     const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
     const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
+    const titlePath = `@INDEX/${testPath(path) ? '' : path}${metadata.title}`
     const contentsBlob = new Blob([contents], { type: 'text/plain'})
     const metadataBlob = new Blob([JSON.stringify({
       ...metadataDefaults,
       ...metadata,
     })], { type: 'application/json' })
+    const titleBlob = new Blob([])
 
     return Promise.all([
       this.s3.putObject({
@@ -79,12 +82,42 @@ class S3Backend {
         Body: metadataBlob,
         ContentType: 'application/json',
       }).promise(),
+      this.s3.putObject({
+        Key: titlePath,
+        Body: titleBlob,
+      }).promise(),
     ])
   }
 
-  pages = () => {
-    this.s3.listObjectsV2().promise().then(console.log, console.log)
+  delete = path => {
+    return this.get(path).then(([contents, metadata]) => {
+      const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
+      const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
+      const titlePath = `@INDEX/${testPath(path) ? '' : path}${metadata.title}`
+  
+      return Promise.all([
+        this.s3.deleteObject({ Key: contentsPath }).promise(),
+        this.s3.deleteObject({ Key: metadataPath }).promise(),
+        this.s3.deleteObject({ Key: titlePath }).promise(),
+      ])
+    })
+  }
+
+  list = () => {
+    return this.s3.listObjectsV2({ Prefix: '@INDEX/' }).promise()
+    .then(response => _.merge({}, ...response.Contents.map(entry => entry.Key).map(key => {
+      const part = _.drop(key.split('/'))
+      const path = [..._.dropRight(part), '@INDEX']
+      const value = _.last(part)
+      return createObject(path, value)
+    })))
   }
 }
+
+const createObject = ([head, ...tail], value) => tail.length ? ({
+  [head]: createObject(tail, value),
+}) : ({
+  [head]: value,
+})
 
 export default S3Backend

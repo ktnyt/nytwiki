@@ -55,8 +55,7 @@ class Home extends Component {
   }
 
   render = () => {
-    const { classes, contents, metadata, update, editing, toggleEdit } = this.props
-    console.log(this.state.contents)
+    const { contents, update, editing, toggleEdit } = this.props
 
     return (
       <DocumentTitle title='Home'>
@@ -74,8 +73,7 @@ class Home extends Component {
                 <Tooltip title='保存する' placement='bottom'>
                   <div>
                     <IconButton onClick={event => {
-                      update(this.state.contents, this.state.metadata)
-                      toggleEdit()
+                      update(this.state.contents, this.state.metadata).then(toggleEdit, toggleEdit)
                     }}>
                       <SaveIcon />
                     </IconButton>
