@@ -1,5 +1,11 @@
 import AWS from 'aws-sdk'
 
+const metadataDefaults = {
+  template: 'Default',
+}
+
+const testPath = path => !path || path.length === 0 || path === '/'
+
 class S3Backend {
   constructor(region, bucket, id) {
     AWS.config.update({
@@ -21,20 +27,31 @@ class S3Backend {
           }
         })
 
+        this.get().catch(error => {
+          this.put('', {
+            template: 'Home',
+          }).catch(reject)
+        })
+
         resolve(this)
       })
     })
   }
 
   get = path => {
-    const contentsPath = !path || path.length === 0 ? 'contents.md' : `${path}/contents.md`
-    const metadataPath = !path || path.length === 0 ? 'metadata.json' : `${path}/metadata.json`
+    const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
+    const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
 
     return Promise.all([
-      this.s3.getObject({ Key: contentsPath }).promise(),
-      this.s3.getObject({ Key: metadataPath }).promise(),
+      this.s3.getObject({ Key: contentsPath }).promise()
+      .then(object => object.Body.toString()),
+      this.s3.getObject({ Key: metadataPath }).promise()
+      .then(object => object.Body.toString())
+      .then(string => JSON.parse(string)),
     ])
   }
+
+  add = this.put
 
   put = (path, contents, metadata) => {
     if(!metadata) {
@@ -43,15 +60,30 @@ class S3Backend {
       path = ''
     }
 
-    const contentsPath = path.length === 0 ? 'contents.md' : `${path}/contents.md`
-    const metadataPath = path.length === 0 ? 'metadata.json' : `${path}/metadata.json`
+    const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
+    const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
     const contentsBlob = new Blob([contents], { type: 'text/plain'})
-    const metadataBlob = new Blob([JSON.stringify(metadata)], { type: 'application/json' })
+    const metadataBlob = new Blob([JSON.stringify({
+      ...metadataDefaults,
+      ...metadata,
+    })], { type: 'application/json' })
 
     return Promise.all([
-      this.s3.putObject({ Key: contentsPath, Body: contentsBlob }).promise(),
-      this.s3.putObject({ Key: metadataPath, Body: metadataBlob }).promise(),
+      this.s3.putObject({
+        Key: contentsPath,
+        Body: contentsBlob,
+        ContentType: 'text/plain',
+      }).promise(),
+      this.s3.putObject({
+        Key: metadataPath,
+        Body: metadataBlob,
+        ContentType: 'application/json',
+      }).promise(),
     ])
+  }
+
+  pages = () => {
+    this.s3.listObjectsV2().promise().then(console.log, console.log)
   }
 }
 
