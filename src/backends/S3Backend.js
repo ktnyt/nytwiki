@@ -1,11 +1,18 @@
 import AWS from 'aws-sdk'
-import _ from 'lodash'
 
-const metadataDefaults = {
-  template: 'Default',
-}
+const responseOk = (body=new Blob([]), headers={}) => new Response(body, {
+  status: 200,
+  statusText: 'Ok',
+  headers: new Headers(headers),
+})
 
-const testPath = path => !path || path.length === 0 || path === '/'
+const responseNotFound = (body=new Blob([]), headers={}) => new Response(body, {
+  status: 404,
+  statusText: 'Not Found',
+  headers: new Headers(headers),
+})
+
+const makeKey = path => [path, 'index.json'].join(path.length ? '/' : '')
 
 class S3Backend {
   constructor(region, bucket, id) {
@@ -16,108 +23,49 @@ class S3Backend {
       })
     })
 
-    this.ready = new Promise((resolve, reject) => {
-      AWS.config.credentials.get(err => {
-        if(err) {
-          reject(err)
-        }
-  
-        this.s3 = new AWS.S3({
-          params: {
-            Bucket: bucket,
-          }
-        })
+    this.s3 = new AWS.S3({
+      params: {
+        Bucket: bucket,
+      }
+    })
 
-        this.read().then(() => resolve(this), error => {
-          this.create('', {
-            title: 'Home',
-            template: 'Home',
-          }).then(() => resolve(this), reject)
-        })
-      })
+    AWS.config.credentials.get(err => {
+      if(err) {
+        throw err
+      }
     })
   }
 
-  onReady = f => this.ready.then(f)
+  create = (path, data) => this.update(path, data)
 
-  create = this.update
+  read = path => new Promise((resolve, reject) => {
+    const Key = makeKey(path)
 
-  read = path => {
-    const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
-    const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
+    const success = ({ Body }) => resolve(responseOk(Body))
+    const failure = error => resolve(responseNotFound())
 
-    return Promise.all([
-      this.s3.getObject({ Key: contentsPath }).promise()
-      .then(object => object.Body.toString()),
-      this.s3.getObject({ Key: metadataPath }).promise()
-      .then(object => JSON.parse(object.Body.toString())),
-    ])
-  }
+    this.s3.getObject({ Key }).promise().then(success, failure)
+  })
 
-  update = (path, contents, metadata) => {
-    if(!metadata) {
-      metadata = contents
-      contents = path
-      path = '/'
-    }
+  update = (path, data) => new Promise((resolve, reject) => {
+    const Key = makeKey(path)
+    const ContentType = 'application/json'
+    const Body = new Blob([JSON.stringify(data)], { type: ContentType })
 
-    const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
-    const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
-    const titlePath = `@INDEX/${testPath(path) ? '' : path}${metadata.title}`
-    const contentsBlob = new Blob([contents], { type: 'text/plain'})
-    const metadataBlob = new Blob([JSON.stringify({
-      ...metadataDefaults,
-      ...metadata,
-    })], { type: 'application/json' })
-    const titleBlob = new Blob([])
+    const success = () => responseOk(Body)
+    const failure = error => resolve(responseNotFound())
 
-    return Promise.all([
-      this.s3.putObject({
-        Key: contentsPath,
-        Body: contentsBlob,
-        ContentType: 'text/plain',
-      }).promise(),
-      this.s3.putObject({
-        Key: metadataPath,
-        Body: metadataBlob,
-        ContentType: 'application/json',
-      }).promise(),
-      this.s3.putObject({
-        Key: titlePath,
-        Body: titleBlob,
-      }).promise(),
-    ])
-  }
+    this.s3.putObject({ Key, Body, ContentType }).promise().then(success, failure)
+  })
 
-  delete = path => {
-    return this.get(path).then(([contents, metadata]) => {
-      const contentsPath = testPath(path) ? 'contents.md' : `${path}/contents.md`
-      const metadataPath = testPath(path) ? 'metadata.json' : `${path}/metadata.json`
-      const titlePath = `@INDEX/${testPath(path) ? '' : path}${metadata.title}`
-  
-      return Promise.all([
-        this.s3.deleteObject({ Key: contentsPath }).promise(),
-        this.s3.deleteObject({ Key: metadataPath }).promise(),
-        this.s3.deleteObject({ Key: titlePath }).promise(),
-      ])
-    })
-  }
+  delete = path => new Promise((resolve, reject) => {
+    const Key = makeKey(path)
 
-  list = () => {
-    return this.s3.listObjectsV2({ Prefix: '@INDEX/' }).promise()
-    .then(response => _.merge({}, ...response.Contents.map(entry => entry.Key).map(key => {
-      const part = _.drop(key.split('/'))
-      const path = [..._.dropRight(part), '@INDEX']
-      const value = _.last(part)
-      return createObject(path, value)
-    })))
-  }
+    const success = () => resolve(responseOk())
+    const failure = error => resolve(responseNotFound())
+
+    this.s3.deleteObject({ Key }).promise().then(success, failure)
+  })
 }
-
-const createObject = ([head, ...tail], value) => tail.length ? ({
-  [head]: createObject(tail, value),
-}) : ({
-  [head]: value,
-})
 
 export default S3Backend

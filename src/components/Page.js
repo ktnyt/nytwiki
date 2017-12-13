@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import is from 'is_js'
 
-import templates from '../templates'
+import Template from '../template'
 
 class Page extends Component {
   state = {
-    contents: undefined,
-    metadata: undefined,
+    response: undefined,
     error: undefined,
   }
 
@@ -21,84 +19,47 @@ class Page extends Component {
 
   static childContextTypes = {
     wiki: PropTypes.object.isRequired,
+    page: PropTypes.object.isRequired,
   }
 
   getChildContext = () => {
+    const { path } = this.props
+    const { wiki } = this.context
+    const { response } = this.state
+
     return {
       ...this.context,
+      page: {
+        path,
+        response,
+        update: data => wiki.update(path, data).then(this.update),
+        delete: data => wiki.delete(path, data).then(this.update),
+      },
     }
   }
 
   componentWillMount = () => {
-    this.setup(this.props, this.context)
+    const { path } = this.props
+    const { wiki } = this.context
+    console.log(wiki)
+
+    wiki.read(path).then(response => this.setState({ response }))
   }
 
   componentWillReceiveProps = (nextProps, nextContext) => {
-    this.setup(nextProps, nextContext)
+    if(this.props.path === nextProps.path) return
+
+    const { path } = nextProps
+    const { wiki } = nextContext
+
+    wiki.read(path).then(response => this.setState({ response }))
   }
 
-  setup = (props, context) => {
-    const { path } = props
-    const { wiki } = context
-
-    wiki.handlers.read(path).then(([contents, metadata]) => {
-      this.setState({ contents, metadata })
-    }, error => {
-      this.setState({ error })
-    })
-  }
-
-  update = (contents, metadata) => {
-    const { path } = this.props
-    const { wiki } = this.context
-
-    return wiki.handlers.update(path, contents, metadata).then(() => {
-      return wiki.handlers.read(path).then(([contents, metadata]) => {
-        this.setState({ contents, metadata })
-      }, error => {
-        this.setState({ error })
-      })
-    }, error => {
-      this.setState({ error })
-    })
-  }
-
-  delete = () => {
-    const { path } = this.props
-    const { wiki } = this.context
-
-    return wiki.handlers.delete(path)
-  }
+  update = response => this.setState({ response })
 
   render = () => {
-    const { contents, metadata, error } = this.state
-
-    // TODO: Add comprehensive error handling
-    return is.not.undefined(error) ? (
-      error.message === 'The specified key does not exist.' ? (
-        '404 Not Found'
-      ) : (
-        error.message
-      )
-
-    // TODO: Add loading feature (spinner?)
-    ) : is.any.undefined(contents, metadata) ? (
-      null
-
-    // TODO: Add missing template handling
-    ) : !templates.hasOwnProperty(metadata.template) ? (
-      null
-    ) : (
-      React.createElement(
-        templates[metadata.template],
-        {
-          metadata,
-          contents,
-          update: this.update,
-          delete: this.delete,
-        },
-        null,
-      )
+    return !this.state.response ? null : (
+      <Template />
     )
   }
 }

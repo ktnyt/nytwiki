@@ -19,7 +19,7 @@ class App extends Component {
       <BackendProvider backend={backend}>
         <Window>
           <Router>
-            <Route path='*' render={({ match }) => <Page path={match.url} />} />
+            <Route path='*' render={({ match }) => <Page path={match.url.slice(1)} />} />
           </Router>
         </Window>
       </BackendProvider>
