@@ -62,7 +62,6 @@ class NewPage extends Component {
   render = () => {
     const { classes } = this.props
     const { wiki, page } = this.context
-    console.log(wiki)
 
     return (
       <div className={classes.hero}>

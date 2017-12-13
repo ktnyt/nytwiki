@@ -6,12 +6,10 @@ import NewPage from './NewPage'
 
 class Template extends Component {
   static contextTypes = {
-    wiki: PropTypes.object.isRequired,
     page: PropTypes.object.isRequired,
   }
 
   static childContextTypes = {
-    wiki: PropTypes.object.isRequired,
     page: PropTypes.object.isRequired,
   }
 
@@ -22,12 +20,16 @@ class Template extends Component {
   }
 
   render = () => {
-    const { response } = this.context.page
+    const { page } = this.context
 
     return (
        <AppFrame>
-         {response.status === 200 ? <div></div> : (
-           <NewPage />
+         {page.response.status === 200 ? (
+           <div></div>
+         ) : page.response.status === 404 ? (
+           <NewPage page={page} />
+         ) : (
+           <div>Unknown Error</div>
          )}
        </AppFrame>
     )

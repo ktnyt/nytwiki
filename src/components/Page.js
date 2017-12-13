@@ -32,6 +32,7 @@ class Page extends Component {
       page: {
         path,
         response,
+        create: data => wiki.create(path, data).then(this.update),
         update: data => wiki.update(path, data).then(this.update),
         delete: data => wiki.delete(path, data).then(this.update),
       },
@@ -41,7 +42,6 @@ class Page extends Component {
   componentWillMount = () => {
     const { path } = this.props
     const { wiki } = this.context
-    console.log(wiki)
 
     wiki.read(path).then(response => this.setState({ response }))
   }
@@ -58,9 +58,7 @@ class Page extends Component {
   update = response => this.setState({ response })
 
   render = () => {
-    return !this.state.response ? null : (
-      <Template />
-    )
+    return !this.state.response ? null : <Template />
   }
 }
 
