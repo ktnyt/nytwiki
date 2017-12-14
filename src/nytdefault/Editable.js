@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-const Editable = (Wrapped) => {
+import Editor from './Editor'
+
+const Editable = Wrapped => {
   class Wrapper extends Component {
     state = { editing: false }
+
+    static propTypes = {
+      contents: PropTypes.string,
+      onSave: PropTypes.func.isRequired,
+      onCancel: PropTypes.func.isRequired,
+    }
+
+    static defaultProps = {
+      contents: '',
+    }
 
     toggleEdit = () => {
       const editing = !this.state.editing
@@ -12,13 +25,10 @@ const Editable = (Wrapped) => {
     render = () => {
       const props = {
         ...this.props,
-        editing: this.state.editing,
         toggleEdit: this.toggleEdit,
       }
       
-      return (
-        <Wrapped {...props} />
-      )
+      return this.state.editing ? <Editor {...props} /> : <Wrapped {...props} />
     }
   }
 

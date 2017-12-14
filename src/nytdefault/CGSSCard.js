@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class Default extends Component {
+class CGSSCard extends Component {
   static propTypes = {
-    page: PropTypes.object.isRequired,
+    contents: PropTypes.string.isRequired,
+    metadata: PropTypes.object.isRequired,
   }
 
   render = () => {
@@ -13,4 +14,4 @@ class Default extends Component {
   }
 }
 
-export default Default
+export default CGSSCard

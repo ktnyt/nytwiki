@@ -6,6 +6,7 @@ import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
 import AppContent from './AppContent'
+import Editable from './Editable'
 import img404 from './img/404.jpg'
 
 const styles = theme => ({
@@ -52,16 +53,14 @@ const styles = theme => ({
 class NewPage extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-  }
-
-  static contextTypes = {
-    wiki: PropTypes.object.isRequired,
-    page: PropTypes.object.isRequired,
+    toggleEdit: PropTypes.func,
   }
 
   render = () => {
-    const { classes } = this.props
-    const { wiki, page } = this.context
+    const {
+      classes,
+      toggleEdit,
+    } = this.props
 
     return (
       <div className={classes.hero}>
@@ -77,7 +76,7 @@ class NewPage extends Component {
               <Button
                 className={classes.button}
                 raised
-                onClick={event => wiki.create(page.path, {})}
+                onClick={toggleEdit}
               >
                 {'ページを作る'}
               </Button>
@@ -89,4 +88,4 @@ class NewPage extends Component {
   }
 }
 
-export default withStyles(styles)(NewPage)
+export default withStyles(styles)(Editable(NewPage))

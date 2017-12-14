@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import Template from '../template'
+import Template from '../nytdefault'
 
 class Page extends Component {
   state = {
@@ -33,6 +33,7 @@ class Page extends Component {
         path,
         response,
         create: data => wiki.create(path, data).then(this.update),
+        read: data => wiki.read(path).then(this.update),
         update: data => wiki.update(path, data).then(this.update),
         delete: data => wiki.delete(path, data).then(this.update),
       },

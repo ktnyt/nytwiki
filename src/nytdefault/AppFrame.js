@@ -135,6 +135,7 @@ class AppFrame extends Component {
         <AppBar className={classNames(classes.appBar, classes.appBarShift)}>
           <Toolbar>
             <IconButton
+              className={classes.navIconHide}
               color='contrast'
               onClick={this.handleDrawerToggle}
             >
