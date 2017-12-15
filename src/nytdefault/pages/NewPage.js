@@ -5,9 +5,10 @@ import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
-import AppContent from './AppContent'
-import Editable from './Editable'
-import img404 from './img/404.jpg'
+import AppContent from '../components/AppContent'
+import Editable from '../components/Editable'
+import Editor from '../components/Editor'
+import img404 from '../assets/img/404.jpg'
 
 const styles = theme => ({
   root: {
@@ -88,4 +89,4 @@ class NewPage extends Component {
   }
 }
 
-export default withStyles(styles)(Editable(NewPage))
+export default Editable(withStyles(styles)(NewPage), Editor)

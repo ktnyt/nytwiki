@@ -17,29 +17,6 @@ class Page extends Component {
     wiki: PropTypes.object,
   }
 
-  static childContextTypes = {
-    wiki: PropTypes.object.isRequired,
-    page: PropTypes.object.isRequired,
-  }
-
-  getChildContext = () => {
-    const { path } = this.props
-    const { wiki } = this.context
-    const { response } = this.state
-
-    return {
-      ...this.context,
-      page: {
-        path,
-        response,
-        create: data => wiki.create(path, data).then(this.update),
-        read: data => wiki.read(path).then(this.update),
-        update: data => wiki.update(path, data).then(this.update),
-        delete: data => wiki.delete(path, data).then(this.update),
-      },
-    }
-  }
-
   componentWillMount = () => {
     const { path } = this.props
     const { wiki } = this.context
@@ -59,7 +36,18 @@ class Page extends Component {
   update = response => this.setState({ response })
 
   render = () => {
-    return !this.state.response ? null : <Template />
+    const { path } = this.props
+    const { wiki } = this.context
+    const { response } = this.state
+
+    return !this.state.response ? null : <Template page={{
+      path,
+      response,
+      create: data => wiki.create(path, data).then(this.update),
+      read:   ()   => wiki.read(path).then(this.update),
+      update: data => wiki.update(path, data).then(this.update),
+      delete: ()   => wiki.delete(path).then(this.update),
+    }} />
   }
 }
 

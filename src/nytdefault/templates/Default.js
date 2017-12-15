@@ -9,8 +9,7 @@ import ModeEditIcon from 'material-ui-icons/ModeEdit'
 
 import ReactMarkdown from 'react-markdown'
 
-import AppContent from './AppContent'
-import Editable from './Editable'
+import AppContent from '../components/AppContent'
 
 const styles = theme => ({
   root: {
@@ -35,7 +34,6 @@ class Default extends Component {
     return (
       <AppContent>
         <div className={classes.root}>
-          <ReactMarkdown source={contents} />
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>
               <Button color='primary' onClick={toggleEdit}>
@@ -44,10 +42,11 @@ class Default extends Component {
               </Button>
             </Grid>
           </Grid>
+          <ReactMarkdown source={contents} />
         </div>
       </AppContent>
     )
   }
 }
 
-export default withStyles(styles)(Editable(Default))
+export default withStyles(styles)(Default)

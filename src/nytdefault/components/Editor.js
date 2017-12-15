@@ -15,7 +15,7 @@ import DeleteIcon from 'material-ui-icons/Delete'
 import SimpleMDE from 'react-simplemde-editor'
 
 import AppContent from './AppContent'
-import templates from './templates'
+import templates from '../templates'
 
 const options = {
   toolbar: [
@@ -49,14 +49,20 @@ const styles = theme => ({
 })
 
 class Editor extends Component {
-  state = {
-    template: 'default',
-    contents: '',
-    metadata: {},
+  constructor(props) {
+    super(props)
+    this.state = {
+      template: 'default',
+      contents: props.contents,
+      metadata: {},
+    }
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    contents: PropTypes.string.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
     toggleEdit: PropTypes.func.isRequired,
   }
 
@@ -76,7 +82,7 @@ class Editor extends Component {
               <Select
                 value={this.state.template}
                 onChange={event => this.setState({ template: event.target.value })}
-                input={<Input name='template' fullwidth />}
+                input={<Input name='template' />}
               >
                 {templateOptions}
               </Select>
@@ -92,8 +98,7 @@ class Editor extends Component {
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>
               <Button raised color='accent' onClick={event => {
-                onCancel()
-                toggleEdit()
+                onCancel(this.state).then(toggleEdit)
               }}>
                 <DeleteIcon className={classes.leftIcon} />
                 取消
@@ -101,8 +106,7 @@ class Editor extends Component {
             </Grid>
             <Grid item>
               <Button raised color='primary' onClick={event => {
-                onSave(this.state)
-                toggleEdit()
+                onSave(this.state).then(toggleEdit)
               }}>
                 <SaveIcon className={classes.leftIcon} />
                 保存

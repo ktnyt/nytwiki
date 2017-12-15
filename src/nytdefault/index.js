@@ -1,49 +1,52 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import AppFrame from './AppFrame'
-import NewPage from './NewPage'
+import AppFrame from './components/AppFrame'
+import Editable from './components/Editable'
+import Editor from './components/Editor'
+import NewPage from './pages/NewPage'
 import templates from './templates'
 
 class Root extends Component {
   state = { data: false }
 
-  static contextTypes = {
+  static propTypes = {
     page: PropTypes.object.isRequired,
-  }
-
-  static childContextTypes = {
-    page: PropTypes.object.isRequired,
-  }
-
-  getChildContext = () => {
-    return {
-      ...this.context,
-    }
   }
 
   componentWillMount = () => {
-    this.context.page.response.json().then(data => this.setState({ data }))
+    const { page } = this.props
+    if(page.response.status === 200) {
+      page.response.json().then(data => this.setState({ data }))
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { page } = nextProps
+    if(page.response.status === 200) {
+      page.response.json().then(data => this.setState({ data }))
+    }
   }
 
   render = () => {
-    const { page } = this.context
+    const { page } = this.props
     const { data } = this.state
+
+    const renderTemplate = ({ template, contents, metadata }) => {
+      const { component } = templates[template]
+      const Wrapped = Editable(component, Editor)
+      return <Wrapped
+        contents={contents}
+        metadata={metadata}
+        onSave={data => page.update(data)}
+        onCancel={datat => page.read()}
+      />
+    }
 
     return (
        <AppFrame>
          {page.response.status === 200 ? (
-           data ? (
-            (({ template, contents, metadata }) => {
-              const Template = templates[template].component
-              return <Template
-                contents={contents}
-                metadata={metadata}
-                onSave={data => page.update(data)}
-                onCancel={data => page.read()}
-              />
-             })(data)
-           ) : <div></div>
+           data ? renderTemplate(data) : <div></div>
          ) : page.response.status === 404 ? (
           <NewPage
             onSave={data => page.create(data)}

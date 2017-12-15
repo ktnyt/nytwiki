@@ -52,7 +52,7 @@ class S3Backend {
     const ContentType = 'application/json'
     const Body = new Blob([JSON.stringify(data)], { type: ContentType })
 
-    const success = () => responseOk(Body)
+    const success = () => resolve(responseOk(Body))
     const failure = error => resolve(responseNotFound())
 
     this.s3.putObject({ Key, Body, ContentType }).promise().then(success, failure)
