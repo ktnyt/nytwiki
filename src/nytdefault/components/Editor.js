@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import is from 'is_js'
 
 import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
@@ -16,6 +17,29 @@ import SimpleMDE from 'react-simplemde-editor'
 
 import AppContent from './AppContent'
 import templates from '../templates'
+
+import { FormControlLabel, FormGroup } from 'material-ui/Form'
+import Switch from 'material-ui/Switch'
+
+const literalTypes = ['boolean', 'number', 'string', 'null']
+
+const EditorBuilder = schema => {
+  if(!schema.hasOwnProperty('type')) {
+    return null
+  }
+
+  if(literalTypes.includes(schema.type)) {
+    switch(schema.type) {
+    case 'boolean':
+      return (
+        <FormControlLabel
+          control={<Switch />}
+          label={}
+        />
+      )
+    }
+  }
+}
 
 const options = {
   toolbar: [
@@ -69,6 +93,11 @@ class Editor extends Component {
   render = () => {
     const { classes, contents, onSave, onCancel, toggleEdit } = this.props
 
+    const template = templates[this.state.template]
+    if(template.metadata.hasOwnProperty('properties')) {
+      console.log(Object.keys(template.metadata.properties))
+    }
+
     const templateOptions = Object.keys(templates).map(key => (
       <MenuItem key={key} value={key}>{templates[key].name}</MenuItem>
     ))
@@ -87,6 +116,10 @@ class Editor extends Component {
                 {templateOptions}
               </Select>
             </FormControl>
+          </div>
+
+          <div>
+
           </div>
 
           <SimpleMDE
