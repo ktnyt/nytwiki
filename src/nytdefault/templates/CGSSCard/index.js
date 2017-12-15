@@ -3,13 +3,17 @@ import PropTypes from 'prop-types'
 
 import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
+//import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
+//import Typograhpy from 'material-ui/Typography'
 import Grid from 'material-ui/Grid'
 
 import ModeEditIcon from 'material-ui-icons/ModeEdit'
 
 import ReactMarkdown from 'react-markdown'
 
-import AppContent from '../components/AppContent'
+import AppContent from '../../components/AppContent'
+
+import schema from './schema'
 
 const styles = theme => ({
   root: {
@@ -20,7 +24,7 @@ const styles = theme => ({
   },
 })
 
-class Default extends Component {
+class CGSSCard extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     contents: PropTypes.string.isRequired,
@@ -29,7 +33,7 @@ class Default extends Component {
   }
 
   render = () => {
-    const { classes, contents, toggleEdit } = this.props
+    const { classes, contents, metadata, toggleEdit } = this.props
 
     return (
       <AppContent>
@@ -49,4 +53,9 @@ class Default extends Component {
   }
 }
 
-export default withStyles(styles)(Default)
+export default {
+  name: 'スターライトステージ：カード',
+  component: withStyles(styles)(CGSSCard),
+  metadata: schema,
+}
+

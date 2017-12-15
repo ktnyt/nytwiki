@@ -1,0 +1,111 @@
+{
+  "type": "object",
+  "properties": {
+    "skill": {
+      "title": "能力",
+      "type": "object",
+      "properties": {
+        "center": {
+          "title": "センタースキル",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "名前",
+              "type": "string"
+            },
+            "effect": {
+              "title": "効果",
+              "type": "string"
+            }
+          },
+          "ability": {
+            "title": "センタースキル",
+            "type": "object",
+            "properties": {
+              "name": {
+                "title": "名前",
+                "type": "string"
+              },
+              "effect": {
+                "title": "効果",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "before": {
+      "title": "特訓前",
+      "type": "object",
+      "properties": {
+        "rarity": {
+          "title": "レア度",
+          "type": "string"
+        },
+        "image": {
+          "title": "画像",
+          "type": "string"
+        },
+        "stats": {
+          "title": "ステータス",
+          "type": "object",
+          "properties": {
+            "life": {
+              "title": "ライフ",
+              "type": "number"
+            },
+            "vocal": {
+              "title": "ボーカル",
+              "type": "number"
+            },
+            "dance": {
+              "title": "ダンス",
+              "type": "number"
+            },
+            "visual": {
+              "title": "ビジュアル",
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "after": {
+      "title": "特訓後",
+      "type": "object",
+      "properties": {
+        "rarity": {
+          "title": "レア度",
+          "type": "string"
+        },
+        "image": {
+          "title": "画像",
+          "type": "string"
+        },
+        "stats": {
+          "title": "ステータス",
+          "type": "object",
+          "properties": {
+            "life": {
+              "title": "ライフ",
+              "type": "number"
+            },
+            "vocal": {
+              "title": "ボーカル",
+              "type": "number"
+            },
+            "dance": {
+              "title": "ダンス",
+              "type": "number"
+            },
+            "visual": {
+              "title": "ビジュアル",
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  }
+}
