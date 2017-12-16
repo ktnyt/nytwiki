@@ -2112,6 +2112,10 @@ encodeurl@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.1.tgz#79e3d58655346909fe6f0f45a5de68103b294d20"
 
+encoding-japanese@^1.0.26:
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/encoding-japanese/-/encoding-japanese-1.0.26.tgz#240a7a852d966dc07c4dc7d079a67b5777a62ba0"
+
 encoding@^0.1.11:
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"

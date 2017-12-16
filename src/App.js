@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import BackendProvider from './components/BackendProvider'
-import Window from './components/Window'
 import Page from './components/Page'
 
 import Backend from './backends/S3Backend'
@@ -17,11 +16,9 @@ class App extends Component {
   render = () => {
     return (
       <BackendProvider backend={backend}>
-        <Window>
-          <Router>
-            <Route path='*' render={({ match }) => <Page path={match.url.slice(1)} />} />
-          </Router>
-        </Window>
+        <Router>
+          <Route path='*' render={({ match }) => <Page path={match.url.slice(1)} />} />
+        </Router>
       </BackendProvider>
     )
   }

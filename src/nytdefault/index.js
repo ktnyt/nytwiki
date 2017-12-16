@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Encoding from 'encoding-japanese'
 
 import AppFrame from './components/AppFrame'
 import Editable from './components/Editable'
@@ -14,16 +15,22 @@ class Root extends Component {
   }
 
   componentWillMount = () => {
-    const { page } = this.props
-    if(page.response.status === 200) {
-      page.response.json().then(data => this.setState({ data }))
-    }
+    this.handleResponse(this.props.page.response)
   }
 
   componentWillReceiveProps = nextProps => {
-    const { page } = nextProps
-    if(page.response.status === 200  && !page.response.bodyUsed) {
-      page.response.clone().json().then(data => this.setState({ data }))
+    this.handleResponse(nextProps.page.response)
+  }
+
+  handleResponse = response => {
+    if(response.status === 200 && !response.bodyUsed) {
+      response.text().then(text => {
+        const encoding = Encoding.detect(encoding)
+        if(encoding !== 'UNICODE') {
+          return Encoding.convert(text, { from: encoding, to: 'UNICODE', type: 'string' })
+        }
+        return text
+      }).then(text => JSON.parse(text)).then(data => this.setState({ data }))
     }
   }
 

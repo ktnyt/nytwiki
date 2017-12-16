@@ -12,7 +12,6 @@ import ModeEditIcon from 'material-ui-icons/ModeEdit'
 import ReactMarkdown from 'react-markdown'
 
 import AppContent from '../../components/AppContent'
-
 import schema from './schema'
 
 const styles = theme => ({

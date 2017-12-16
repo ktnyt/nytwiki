@@ -31,7 +31,7 @@ const Editable = Wrapped => {
         ...this.props,
         toggleEdit: this.toggleEdit,
       }
-      
+
       return this.state.editing ? <PageEditor {...props} /> : <Wrapped {...props} />
     }
   }
