@@ -1,13 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "カード情報",
   "type": "object",
   "properties": {
+    "cardname": {
+      "title": "カード名",
+      "type": "string"
+    },
+    "idolname": {
+      "title": "アイドル名",
+      "type": "string"
+    },
     "skill": {
       "title": "能力",
       "type": "object",
       "properties": {
         "center": {
-          "title": "センタースキル",
+          "title": "センター",
           "type": "object",
           "properties": {
             "name": {
@@ -18,19 +27,19 @@
               "title": "効果",
               "type": "string"
             }
-          },
-          "ability": {
-            "title": "センタースキル",
-            "type": "object",
-            "properties": {
-              "name": {
-                "title": "名前",
-                "type": "string"
-              },
-              "effect": {
-                "title": "効果",
-                "type": "string"
-              }
+          }
+        },
+        "ability": {
+          "title": "特技",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "名前",
+              "type": "string"
+            },
+            "effect": {
+              "title": "効果",
+              "type": "string"
             }
           }
         }

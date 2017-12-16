@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
-//import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
-//import Typograhpy from 'material-ui/Typography'
+import Card, { CardContent, CardMedia } from 'material-ui/Card'
+import Typography from 'material-ui/Typography'
 import Grid from 'material-ui/Grid'
 
 import ModeEditIcon from 'material-ui-icons/ModeEdit'
@@ -22,6 +22,10 @@ const styles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
+  media: {
+    width: '100%',
+    height: 300,
+  },
 })
 
 class CGSSCard extends Component {
@@ -33,11 +37,34 @@ class CGSSCard extends Component {
   }
 
   render = () => {
-    const { classes, contents, metadata, toggleEdit } = this.props
+    const {
+      classes,
+      contents,
+      metadata,
+      toggleEdit,
+    } = this.props
+
+    const {
+      cardname,
+      idolname,
+      //skill,
+      before,
+      after,
+    } = metadata
 
     return (
       <AppContent>
         <div className={classes.root}>
+          <Card>
+            <CardMedia
+              className={classes.media}
+              image={before.image}
+            />
+            <CardContent>
+              <Typography type='headline'>［{cardname}］{idolname}</Typography>
+              <Typography type='subheading' color='secondary'>{before.rarity} / {after.rarity}</Typography>
+            </CardContent>
+          </Card>
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>
               <Button color='primary' onClick={toggleEdit}>
@@ -56,6 +83,6 @@ class CGSSCard extends Component {
 export default {
   name: 'スターライトステージ：カード',
   component: withStyles(styles)(CGSSCard),
-  metadata: schema,
+  schema,
 }
 

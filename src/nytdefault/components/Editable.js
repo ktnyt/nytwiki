@@ -1,20 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import Editor from './Editor'
+import PageEditor from './PageEditor'
 
 const Editable = Wrapped => {
   class Wrapper extends Component {
     state = { editing: false }
 
     static propTypes = {
+      template: PropTypes.string,
       contents: PropTypes.string,
+      metadata: PropTypes.object,
       onSave: PropTypes.func.isRequired,
       onCancel: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
+      template: 'default',
       contents: '',
+      metadata: {},
     }
 
     toggleEdit = () => {
@@ -28,7 +32,7 @@ const Editable = Wrapped => {
         toggleEdit: this.toggleEdit,
       }
       
-      return this.state.editing ? <Editor {...props} /> : <Wrapped {...props} />
+      return this.state.editing ? <PageEditor {...props} /> : <Wrapped {...props} />
     }
   }
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 import AppFrame from './components/AppFrame'
 import Editable from './components/Editable'
-import Editor from './components/Editor'
 import NewPage from './pages/NewPage'
 import templates from './templates'
 
@@ -21,10 +20,10 @@ class Root extends Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     const { page } = nextProps
-    if(page.response.status === 200) {
-      page.response.json().then(data => this.setState({ data }))
+    if(page.response.status === 200  && !page.response.bodyUsed) {
+      page.response.clone().json().then(data => this.setState({ data }))
     }
   }
 
@@ -34,12 +33,13 @@ class Root extends Component {
 
     const renderTemplate = ({ template, contents, metadata }) => {
       const { component } = templates[template]
-      const Wrapped = Editable(component, Editor)
+      const Wrapped = Editable(component)
       return <Wrapped
+        template={template}
         contents={contents}
         metadata={metadata}
         onSave={data => page.update(data)}
-        onCancel={datat => page.read()}
+        onCancel={data => page.read()}
       />
     }
 

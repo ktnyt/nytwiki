@@ -7,7 +7,6 @@ import Typography from 'material-ui/Typography'
 
 import AppContent from '../components/AppContent'
 import Editable from '../components/Editable'
-import Editor from '../components/Editor'
 import img404 from '../assets/img/404.jpg'
 
 const styles = theme => ({
@@ -89,4 +88,4 @@ class NewPage extends Component {
   }
 }
 
-export default Editable(withStyles(styles)(NewPage), Editor)
+export default Editable(withStyles(styles)(NewPage))

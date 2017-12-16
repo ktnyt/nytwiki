@@ -54,5 +54,5 @@ class Default extends Component {
 export default {
   name: 'デフォルト',
   component: withStyles(styles)(Default),
-  metadata: schema,
+  schema,
 }
