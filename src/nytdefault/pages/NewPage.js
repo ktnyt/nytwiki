@@ -6,7 +6,6 @@ import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
 import AppContent from '../components/AppContent'
-import Editable from '../components/Editable'
 import img404 from '../assets/img/404.jpg'
 
 const styles = theme => ({
@@ -18,7 +17,6 @@ const styles = theme => ({
     background: `url(${img404}) no-repeat center center fixed`,
     backgroundSize: 'cover',
     minHeight: '100vh', // Makes the hero full height until we get some more content.
-    //flex: '0 0 auto',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -53,14 +51,11 @@ const styles = theme => ({
 class NewPage extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    toggleEdit: PropTypes.func,
+    handleCreate: PropTypes.func.isRequired,
   }
 
   render = () => {
-    const {
-      classes,
-      toggleEdit,
-    } = this.props
+    const { classes, handleCreate } = this.props
 
     return (
       <div className={classes.hero}>
@@ -73,11 +68,7 @@ class NewPage extends Component {
               <Typography type='headline' component='h2' color='inherit' className={classes.headline}>
                 {'このページはまだ存在しません'}
               </Typography>
-              <Button
-                className={classes.button}
-                raised
-                onClick={toggleEdit}
-              >
+              <Button className={classes.button} raised onClick={handleCreate}>
                 {'ページを作る'}
               </Button>
             </div>
@@ -88,4 +79,4 @@ class NewPage extends Component {
   }
 }
 
-export default Editable(withStyles(styles)(NewPage))
+export default withStyles(styles)(NewPage)

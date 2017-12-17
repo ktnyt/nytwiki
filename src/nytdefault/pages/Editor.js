@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
@@ -21,7 +22,7 @@ import ExpandLessIcon from 'material-ui-icons/ExpandLess'
 import SimpleMDE from 'react-simplemde-editor'
 import SchemaForm from 'react-jsonschema-form'
 
-import AppContent from './AppContent'
+import AppContent from '../components/AppContent'
 import templates from '../templates'
 
 const options = {
@@ -107,7 +108,6 @@ class Editor extends Component {
     metadata: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    toggleEdit: PropTypes.func.isRequired,
   }
 
   componentWillReceiveProps = nextProps => {
@@ -125,7 +125,6 @@ class Editor extends Component {
       classes,
       onSave,
       onCancel,
-      toggleEdit,
     } = this.props
 
     const {
@@ -141,6 +140,21 @@ class Editor extends Component {
     return (
       <AppContent>
         <div className={classes.root}>
+        <Grid container direction='row' justify='flex-end' alignItems='center'>
+            <Grid item>
+              <Button raised color='accent' onClick={event => onCancel(this.state)}>
+                <DeleteIcon className={classes.leftIcon} />
+                取消
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button raised color='primary' onClick={event => onSave(this.state)}>
+                <SaveIcon className={classes.leftIcon} />
+                保存
+              </Button>
+            </Grid>
+          </Grid>
+
           <div className={classes.metadata}>
             <FormControl className={classes.formElement}>
               <InputLabel htmlFor='template'>テンプレート</InputLabel>
@@ -184,19 +198,13 @@ class Editor extends Component {
 
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>
-              <Button raised color='accent' onClick={event => {
-                onCancel(this.state)
-                toggleEdit()
-              }}>
+              <Button raised color='accent' onClick={event => onCancel(this.state)}>
                 <DeleteIcon className={classes.leftIcon} />
                 取消
               </Button>
             </Grid>
             <Grid item>
-              <Button raised color='primary' onClick={event => {
-                onSave(this.state)
-                toggleEdit()
-              }}>
+              <Button raised color='primary' onClick={event => onSave(this.state)}>
                 <SaveIcon className={classes.leftIcon} />
                 保存
               </Button>

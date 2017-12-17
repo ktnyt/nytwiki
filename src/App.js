@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import _ from 'lodash'
 
 import BackendProvider from './components/BackendProvider'
 import Page from './components/Page'
@@ -17,7 +18,12 @@ class App extends Component {
     return (
       <BackendProvider backend={backend}>
         <Router>
-          <Route path='*' render={({ match }) => <Page path={match.url.slice(1)} />} />
+          <Route path='*' render={({ match }) => {
+            const paths = match.url.slice(1).split('/')
+            const edit = _.last(paths) === 'edit'
+            const path = (edit ? _.dropRight(paths) : paths).join('/')
+            return <Page path={path} edit={edit} />
+          }} />
         </Router>
       </BackendProvider>
     )

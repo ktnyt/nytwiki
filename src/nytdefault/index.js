@@ -3,31 +3,46 @@ import PropTypes from 'prop-types'
 import Encoding from 'encoding-japanese'
 
 import AppFrame from './components/AppFrame'
-import Editable from './components/Editable'
+import Editor from './pages/Editor'
 import NewPage from './pages/NewPage'
 import templates from './templates'
 
+const empty = {
+  template: 'default',
+  contents: '',
+  metadata: {},
+}
+
 class Root extends Component {
-  state = { data: false }
+  state = { data: empty }
 
   static propTypes = {
-    page: PropTypes.object.isRequired,
+    response: PropTypes.object.isRequired,
+    edit: PropTypes.bool.isRequired,
+    readPage: PropTypes.func.isRequired,
+    makePage: PropTypes.func.isRequired,
+    editPage: PropTypes.func.isRequired,
+    savePage: PropTypes.func.isRequired,
   }
 
   componentWillMount = () => {
-    this.handleResponse(this.props.page.response)
+    this.handleResponse(this.props.response)
   }
 
   componentWillReceiveProps = nextProps => {
-    this.handleResponse(nextProps.page.response)
+    this.handleResponse(nextProps.response)
   }
 
   handleResponse = response => {
     if(response.status === 200 && !response.bodyUsed) {
       response.text().then(text => {
-        const encoding = Encoding.detect(encoding)
+        const encoding = Encoding.detect(text)
         if(encoding !== 'UNICODE') {
-          return Encoding.convert(text, { from: encoding, to: 'UNICODE', type: 'string' })
+          return Encoding.convert(text, {
+            from: encoding,
+            to: 'UNICODE',
+            type: 'string',
+          })
         }
         return text
       }).then(text => JSON.parse(text)).then(data => this.setState({ data }))
@@ -35,34 +50,41 @@ class Root extends Component {
   }
 
   render = () => {
-    const { page } = this.props
-    const { data } = this.state
+    const {
+      response,
+      edit,
+      readPage,
+      makePage,
+      editPage,
+      savePage,
+    } = this.props
 
-    const renderTemplate = ({ template, contents, metadata }) => {
-      const { component } = templates[template]
-      const Wrapped = Editable(component)
-      return <Wrapped
-        template={template}
-        contents={contents}
-        metadata={metadata}
-        onSave={data => page.update(data)}
-        onCancel={data => page.read()}
-      />
-    }
+    const { template, contents, metadata } = this.state.data
 
     return (
-       <AppFrame>
-         {page.response.status === 200 ? (
-           data ? renderTemplate(data) : <div></div>
-         ) : page.response.status === 404 ? (
-          <NewPage
-            onSave={data => page.create(data)}
-            onCancel={data => page.read()}
+      <AppFrame>
+        {edit ? (
+          <Editor
+            template={template}
+            contents={contents}
+            metadata={metadata}
+            onSave={savePage}
+            onCancel={readPage}
           />
-         ) : (
-           <div>Unknown Error</div>
-         )}
-       </AppFrame>
+        ) : (
+          response.status === 200 ? (
+            React.createElement(templates[template].component, {
+              contents,
+              metadata,
+              handleEdit: event => editPage(),
+            }, null)
+          ) : response.status === 404 ? (
+            <NewPage handleCreate={event => makePage(empty)} />
+          ) : (
+            <div>Unknown Error</div>
+          )
+        )}
+      </AppFrame>
     )
   }
 }

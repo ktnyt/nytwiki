@@ -4,17 +4,16 @@ import PropTypes from 'prop-types'
 import Template from '../nytdefault'
 
 class Page extends Component {
-  state = {
-    response: undefined,
-    error: undefined,
-  }
+  state = { response: false }
 
   static propTypes = {
-    path: PropTypes.string,
+    path: PropTypes.string.isRequired,
+    edit: PropTypes.bool.isRequired,
   }
 
   static contextTypes = {
     wiki: PropTypes.object,
+    router: PropTypes.object,
   }
 
   componentWillMount = () => {
@@ -25,29 +24,41 @@ class Page extends Component {
   }
 
   componentWillReceiveProps = (nextProps, nextContext) => {
-    if(this.props.path === nextProps.path) return
-
     const { path } = nextProps
     const { wiki } = nextContext
 
     wiki.read(path).then(response => this.setState({ response }))
   }
 
-  update = response => this.setState({ response })
-
   render = () => {
-    const { path } = this.props
-    const { wiki } = this.context
+    const { path, edit } = this.props
+    const { wiki, router } = this.context
     const { response } = this.state
 
-    return !this.state.response ? null : <Template page={{
-      path,
-      response,
-      create: data => wiki.create(path, data).then(this.update),
-      read:   ()   => wiki.read(path).then(this.update),
-      update: data => wiki.update(path, data).then(this.update),
-      delete: ()   => wiki.delete(path).then(this.update),
-    }} />
+    const readPage = () => router.history.push(`/${path}`)
+
+    const makePage = data => wiki.create(path, data).then(response => {
+      this.setState({ response })
+      router.history.push(`/${path}/edit`)
+    })
+
+    const editPage = () => router.history.push(`/${path}/edit`)
+
+    const savePage = data => wiki.update(path, data).then(response => {
+      this.setState({ response })
+      router.history.push(`/${path}`)
+    })
+
+    return !response ? null : (
+      <Template
+        response={response}
+        edit={edit}
+        readPage={readPage}
+        makePage={makePage}
+        editPage={editPage}
+        savePage={savePage}
+      />
+    )
   }
 }
 

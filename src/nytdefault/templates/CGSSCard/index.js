@@ -3,15 +3,17 @@ import PropTypes from 'prop-types'
 
 import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
-import Card, { CardContent, CardMedia } from 'material-ui/Card'
-import Typography from 'material-ui/Typography'
+import Card from 'material-ui/Card'
 import Grid from 'material-ui/Grid'
+import Tabs, { Tab } from 'material-ui/Tabs'
 
 import ModeEditIcon from 'material-ui-icons/ModeEdit'
 
 import ReactMarkdown from 'react-markdown'
 
+import CGSSCardContent from './CGSSCardContent'
 import AppContent from '../../components/AppContent'
+
 import schema from './schema'
 
 const styles = theme => ({
@@ -21,18 +23,16 @@ const styles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
-  media: {
-    width: '100%',
-    height: 300,
-  },
 })
 
 class CGSSCard extends Component {
+  state = { tab: 0 }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     contents: PropTypes.string.isRequired,
     metadata: PropTypes.object.isRequired,
-    toggleEdit: PropTypes.func.isRequired,
+    handleEdit: PropTypes.func.isRequired,
   }
 
   render = () => {
@@ -40,33 +40,35 @@ class CGSSCard extends Component {
       classes,
       contents,
       metadata,
-      toggleEdit,
+      handleEdit,
     } = this.props
 
     const {
       cardname,
       idolname,
-      //skill,
+      skill,
       before,
       after,
     } = metadata
+
+    const { tab } = this.state
+
+    const handleTab = (event, value) => this.setState({ tab: value })
 
     return (
       <AppContent>
         <div className={classes.root}>
           <Card>
-            <CardMedia
-              className={classes.media}
-              image={before.image}
-            />
-            <CardContent>
-              <Typography type='headline'>［{cardname}］{idolname}</Typography>
-              <Typography type='subheading' color='secondary'>{before.rarity} / {after.rarity}</Typography>
-            </CardContent>
+            <Tabs value={tab} onChange={handleTab} fullWidth centered>
+              <Tab label='特訓前' />
+              <Tab label='特訓後' />
+            </Tabs>
+            {tab === 0 && <CGSSCardContent cardname={cardname} idolname={idolname} skill={skill} data={before} />}
+            {tab === 1 && <CGSSCardContent cardname={cardname} idolname={idolname} skill={skill} data={after} />}
           </Card>
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>
-              <Button color='primary' onClick={toggleEdit}>
+              <Button color='primary' onClick={handleEdit}>
                 <ModeEditIcon className={classes.leftIcon} />
                 ページを編集する
               </Button>

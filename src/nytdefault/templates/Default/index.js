@@ -27,18 +27,18 @@ class Default extends Component {
     classes: PropTypes.object.isRequired,
     contents: PropTypes.string.isRequired,
     metadata: PropTypes.object.isRequired,
-    toggleEdit: PropTypes.func.isRequired,
+    handleEdit: PropTypes.func.isRequired,
   }
 
   render = () => {
-    const { classes, contents, toggleEdit } = this.props
+    const { classes, contents, handleEdit } = this.props
 
     return (
       <AppContent>
         <div className={classes.root}>
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>
-              <Button color='primary' onClick={toggleEdit}>
+              <Button color='primary' onClick={handleEdit}>
                 <ModeEditIcon className={classes.leftIcon} />
                 ページを編集する
               </Button>
