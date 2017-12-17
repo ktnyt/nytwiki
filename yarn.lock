@@ -3971,10 +3971,6 @@ json-loader@^0.5.4:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
 
-json-schema-instantiator@^0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/json-schema-instantiator/-/json-schema-instantiator-0.4.4.tgz#f5dcd3292342e64e38c955d4e627f80f0372369f"
-
 json-schema-traverse@^0.3.0:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.3.1.tgz#349a6d44c53a51de89b40805c5d5e59b417d3340"

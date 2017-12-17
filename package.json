@@ -18,7 +18,6 @@
     "aws-sdk": "^2.167.0",
     "classnames": "^2.2.5",
     "is_js": "^0.9.0",
-    "json-schema-instantiator": "^0.4.4",
     "lodash": "^4.17.4",
     "material-ui": "^1.0.0-beta.23",
     "material-ui-icons": "^1.0.0-beta.17",
