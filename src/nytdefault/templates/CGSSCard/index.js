@@ -14,6 +14,7 @@ import ReactMarkdown from 'react-markdown'
 
 import ResizableCardMedia from './ResizableCardMedia'
 import CGSSCardContent from './CGSSCardContent'
+import LineList from './LineList'
 import AppContent from '../../components/AppContent'
 
 import schema from './schema'
@@ -54,6 +55,7 @@ class CGSSCard extends Component {
     } = metadata
 
     const { tab } = this.state
+    const data = tab === 0 ? before : after
 
     const handleTab = (event, value) => this.setState({ tab: value })
 
@@ -65,7 +67,7 @@ class CGSSCard extends Component {
               <Tab label='特訓前' />
               <Tab label='特訓後' />
             </Tabs>
-            <ResizableCardMedia image={(tab === 0 ? before : after).image} />
+            <ResizableCardMedia image={data.image} />
             <CardContent>
               <Typography type='title'>{cardname}</Typography>
               <Typography type='display1' color='inherit'>{idolname}</Typography>
@@ -83,8 +85,8 @@ class CGSSCard extends Component {
               <Tab label='特訓前' />
               <Tab label='特訓後' />
             </Tabs>
-            {tab === 0 && <CGSSCardContent cardname={cardname} idolname={idolname} skill={skill} data={before} />}
-            {tab === 1 && <CGSSCardContent cardname={cardname} idolname={idolname} skill={skill} data={after} />}
+            <CGSSCardContent data={data} />
+            <LineList lines={data.lines} />
           </Card>
           <Grid container direction='row' justify='flex-end' alignItems='center'>
             <Grid item>

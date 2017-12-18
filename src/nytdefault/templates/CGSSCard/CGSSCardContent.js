@@ -5,7 +5,7 @@ import Grid from 'material-ui/Grid'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Typography from 'material-ui/Typography'
 
-const CGSSCardContent = ({ cardname, idolname, skill, data }) => (
+const CGSSCardContent = ({ data }) => (
   <div>
     <CardContent>
       <Typography type='title'>ステータス</Typography>
@@ -16,14 +16,14 @@ const CGSSCardContent = ({ cardname, idolname, skill, data }) => (
               <ListItemText primary={data.stats.life} secondary='ライフ' />
             </ListItem>
             <ListItem>
-              <ListItemText primary={data.stats.vocal} secondary='ボーカル' />
+              <ListItemText primary={data.stats.dance} secondary='ダンス' />
             </ListItem>
           </List>
         </Grid>
         <Grid item xs={6}>
           <List>
             <ListItem>
-              <ListItemText primary={data.stats.dance} secondary='ダンス' />
+              <ListItemText primary={data.stats.vocal} secondary='ボーカル' />
             </ListItem>
             <ListItem>
               <ListItemText primary={data.stats.visual} secondary='ビジュアル' />

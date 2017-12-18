@@ -54,25 +54,67 @@ properties:
             title: ビジュアル
             type: number
       lines:
-        title: セリフ
-        type: array
-        items:
-          type: object
-          properties:
-            scene:
-              title: 場面
-              type: string
-            line:
-              title: セリフ
-              type: string
-            remark:
-              title: 備考
-              type: string
+        title: セリフ一覧
+        type: object
+        properties:
+          profile:
+            title: プロフィール
+            type: object
+            properties: &lineProps
+              line:
+                title: セリフ
+                type: string
+              remark:
+                title: 備考
+                type: string
+          engage:
+            title: 親愛度
+            type: array
+            items:
+              type: object
+              properties:
+                <<: *lineProps
+          home:
+            title: ホーム
+            type: array
+            items:
+              type: object
+              properties:
+                <<: *lineProps
+          room:
+            title: ルーム
+            type: array
+            items:
+              type: object
+              properties:
+                <<: *lineProps
+          live:
+            title: ライブ
+            type: object
+            properties:
+              before:
+                title: 開始前
+                type: array
+                items:
+                  type: object
+                  properties:
+                    <<: *lineProps
+              ability:
+                title: 特技発動
+                type: array
+                items:
+                  type: object
+                  properties:
+                    <<: *lineProps
+              after:
+                title: 終了後
+                type: array
+                items:
+                  type: object
+                  properties:
+                    <<: *lineProps
   after:
     title: 特訓後
     type: object
     properties:
       <<: *dataProps
-
-
-          

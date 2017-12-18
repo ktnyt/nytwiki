@@ -80,22 +80,129 @@
 					}
 				},
 				"lines": {
-					"title": "セリフ",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"scene": {
-								"title": "場面",
-								"type": "string"
-							},
-							"line": {
-								"title": "セリフ",
-								"type": "string"
-							},
-							"remark": {
-								"title": "備考",
-								"type": "string"
+					"title": "セリフ一覧",
+					"type": "object",
+					"properties": {
+						"profile": {
+							"title": "プロフィール",
+							"type": "object",
+							"properties": {
+								"line": {
+									"title": "セリフ",
+									"type": "string"
+								},
+								"remark": {
+									"title": "備考",
+									"type": "string"
+								}
+							}
+						},
+						"engage": {
+							"title": "親愛度",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"line": {
+										"title": "セリフ",
+										"type": "string"
+									},
+									"remark": {
+										"title": "備考",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"home": {
+							"title": "ホーム",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"line": {
+										"title": "セリフ",
+										"type": "string"
+									},
+									"remark": {
+										"title": "備考",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"room": {
+							"title": "ルーム",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"line": {
+										"title": "セリフ",
+										"type": "string"
+									},
+									"remark": {
+										"title": "備考",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"live": {
+							"title": "ライブ",
+							"type": "object",
+							"properties": {
+								"before": {
+									"title": "開始前",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"line": {
+												"title": "セリフ",
+												"type": "string"
+											},
+											"remark": {
+												"title": "備考",
+												"type": "string"
+											}
+										}
+									}
+								},
+								"ability": {
+									"title": "特技発動",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"line": {
+												"title": "セリフ",
+												"type": "string"
+											},
+											"remark": {
+												"title": "備考",
+												"type": "string"
+											}
+										}
+									}
+								},
+								"after": {
+									"title": "終了後",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"line": {
+												"title": "セリフ",
+												"type": "string"
+											},
+											"remark": {
+												"title": "備考",
+												"type": "string"
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -137,22 +244,129 @@
 					}
 				},
 				"lines": {
-					"title": "セリフ",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"scene": {
-								"title": "場面",
-								"type": "string"
-							},
-							"line": {
-								"title": "セリフ",
-								"type": "string"
-							},
-							"remark": {
-								"title": "備考",
-								"type": "string"
+					"title": "セリフ一覧",
+					"type": "object",
+					"properties": {
+						"profile": {
+							"title": "プロフィール",
+							"type": "object",
+							"properties": {
+								"line": {
+									"title": "セリフ",
+									"type": "string"
+								},
+								"remark": {
+									"title": "備考",
+									"type": "string"
+								}
+							}
+						},
+						"engage": {
+							"title": "親愛度",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"line": {
+										"title": "セリフ",
+										"type": "string"
+									},
+									"remark": {
+										"title": "備考",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"home": {
+							"title": "ホーム",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"line": {
+										"title": "セリフ",
+										"type": "string"
+									},
+									"remark": {
+										"title": "備考",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"room": {
+							"title": "ルーム",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"line": {
+										"title": "セリフ",
+										"type": "string"
+									},
+									"remark": {
+										"title": "備考",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"live": {
+							"title": "ライブ",
+							"type": "object",
+							"properties": {
+								"before": {
+									"title": "開始前",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"line": {
+												"title": "セリフ",
+												"type": "string"
+											},
+											"remark": {
+												"title": "備考",
+												"type": "string"
+											}
+										}
+									}
+								},
+								"ability": {
+									"title": "特技発動",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"line": {
+												"title": "セリフ",
+												"type": "string"
+											},
+											"remark": {
+												"title": "備考",
+												"type": "string"
+											}
+										}
+									}
+								},
+								"after": {
+									"title": "終了後",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"line": {
+												"title": "セリフ",
+												"type": "string"
+											},
+											"remark": {
+												"title": "備考",
+												"type": "string"
+											}
+										}
+									}
+								}
 							}
 						}
 					}
