@@ -1,0 +1,48 @@
+{
+	"schema": "http://json-schema.org/draft-04/schema#",
+	"title": "アイドル情報",
+	"type": "object",
+	"properties": {
+		"title": {
+			"title": "サイト名",
+			"type": "string"
+		},
+		"idol": {
+			"title": "アイドル情報",
+			"type": "object",
+			"properties": {
+				"name": {
+					"title": "アイドル名",
+					"type": "string"
+				},
+				"type": {
+					"title": "タイプ",
+					"type": "string"
+				}
+			}
+		},
+		"cgss": {
+			"title": "スターライトステージ",
+			"type": "object",
+			"properties": {
+				"card": {
+					"title": "カード",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"title": "カード名",
+								"type": "string"
+							},
+							"path": {
+								"title": "URLパス",
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

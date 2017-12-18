@@ -6,6 +6,12 @@ const responseOk = (body=new Blob([]), headers={}) => new Response(body, {
   headers: new Headers(headers),
 })
 
+const responseBadRequest = (body=new Blob([]), headers={}) => new Response(body, {
+  status: 400,
+  statusText: 'Bad Request',
+  headers: new Headers(headers),
+})
+
 const responseNotFound = (body=new Blob([]), headers={}) => new Response(body, {
   status: 404,
   statusText: 'Not Found',
@@ -65,6 +71,25 @@ class S3Backend {
     const failure = error => resolve(responseNotFound())
 
     this.s3.deleteObject({ Key }).promise().then(success, failure)
+  })
+
+  list = () => new Promise((resolve, reject) => {
+    const blobify = body => new Blob([JSON.stringify(body)], { type: 'application/json' })
+    const success = ({ Contents }) => resolve(responseOk(blobify(Contents)))
+    const failure = error => resolve(responseNotFound())
+
+    this.s3.listObjectsV2().promise().then(success, failure)
+  })
+
+  upload = (path, filename, file) => new Promise(({ resolve, reject }) => {
+    const Key = `${path}/${filename}`
+    const ContentType = file.type
+    const Body = file
+
+    const success = () => resolve(responseOk(Body))
+    const failure = error => resolve(responseBadRequest())
+
+    this.s3.putObject({ Key, Body, ContentType }).promised().then(success, failure)
   })
 }
 

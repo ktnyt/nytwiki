@@ -35,14 +35,16 @@ class Page extends Component {
     const { wiki, router } = this.context
     const { response } = this.state
 
+    const editPath = path.length ? `/${path}/edit` : '/edit'
+
     const readPage = () => router.history.push(`/${path}`)
 
     const makePage = data => wiki.create(path, data).then(response => {
       this.setState({ response })
-      router.history.push(`/${path}/edit`)
+      router.history.push(editPath)
     })
 
-    const editPage = () => router.history.push(`/${path}/edit`)
+    const editPage = () => router.history.push(editPath)
 
     const savePage = data => wiki.update(path, data).then(response => {
       this.setState({ response })
