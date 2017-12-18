@@ -5,24 +5,8 @@ import Grid from 'material-ui/Grid'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Typography from 'material-ui/Typography'
 
-import ResizableCardMedia from './ResizableCardMedia'
-
 const CGSSCardContent = ({ cardname, idolname, skill, data }) => (
   <div>
-    <ResizableCardMedia image={data.image} />
-    <CardContent>
-      <Typography type='title'>{cardname}</Typography>
-      <Typography type='display1' color='inherit'>{idolname}</Typography>
-      <Typography type='subheading' color='secondary'>{data.rarity}</Typography>
-    </CardContent>
-    <CardContent>
-      <Typography type='title'>センター効果</Typography>
-      <Typography type='subheading'>{skill.center.name}：{skill.center.effect}</Typography>
-    </CardContent>
-    <CardContent>
-      <Typography type='title'>特技</Typography>
-      <Typography type='subheading'>{skill.ability.name}：{skill.ability.effect}</Typography>
-    </CardContent>
     <CardContent>
       <Typography type='title'>ステータス</Typography>
       <Grid container>

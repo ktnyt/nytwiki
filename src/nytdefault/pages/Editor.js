@@ -20,7 +20,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import ExpandLessIcon from 'material-ui-icons/ExpandLess'
 
 import SimpleMDE from 'react-simplemde-editor'
-import SchemaForm from 'react-jsonschema-form'
+import 'json-editor'
 
 import AppContent from '../components/AppContent'
 import templates from '../templates'
@@ -62,11 +62,11 @@ const instantiate = schema => schema.hasOwnProperty('type') ? (
 
 const cleanInstance = (schema, object) => {
   const instance = instantiate(schema)
-  return _.pick({ ...instance, ...object }, _.paths(instance))
+  return _.pick(_.merge(instance, object), _.paths(instance))
 }
 
 _.mixin({
-  paths: (obj, path=[]) => _.isObject(obj) ? (
+  paths: (obj, path=[]) => _.isObject(obj) && !_.isArray(obj) ? (
     _.flatMap(_.keys(obj).map(key => _.paths(obj[key], [...path, key])))
   ) : [path]
 })
@@ -110,8 +110,14 @@ class Editor extends Component {
     onCancel: PropTypes.func.isRequired,
   }
 
+  componentDidMount = () => {
+    this.setupJSONEditor(this.props)
+  }
+
   componentWillReceiveProps = nextProps => {
     const { template, contents, metadata } = nextProps
+
+    this.setupJSONEditor(nextProps)
 
     this.setState({
       template,
@@ -120,18 +126,37 @@ class Editor extends Component {
     })
   }
 
-  render = () => {
-    const {
-      classes,
-      onSave,
-      onCancel,
-    } = this.props
+  componentWillUnmount = () => {
+    if(this.editor) {
+      this.editor.destroy()
+    }
+  }
 
-    const {
-      template,
-      contents,
-      metadata,
-    } = this.state
+  setupJSONEditor = props => {
+    const { template, metadata } = props
+    
+    const schema = templates[template].schema
+    if(this.editor) {
+      this.editor.destroy()
+    }
+    
+    const startval = cleanInstance(schema, metadata)
+    this.editor = new window.JSONEditor(this.element, {
+      schema,
+      startval,
+      disable_edit_json: true,
+      disable_properties: true,
+    })
+
+    this.editor.on('change', () => {
+      const metadata = this.editor.getValue()
+      this.setState({ metadata })
+    })
+  }
+
+  render = () => {
+    const { classes, onSave, onCancel } = this.props
+    const { contents } = this.state
 
     const templateOptions = Object.keys(templates).map(key => (
       <MenuItem key={key} value={key}>{templates[key].name}</MenuItem>
@@ -178,13 +203,7 @@ class Editor extends Component {
               </CardActions>
               <Collapse in={this.state.expand}>
                 <CardContent>
-                  <SchemaForm
-                    schema={templates[template].schema}
-                    formData={cleanInstance(templates[template].schema, metadata)}
-                    onChange={type => this.setState({ metadata: type.formData })}
-                  >
-                    <div></div>
-                  </SchemaForm>
+                  <div ref={ref => { this.element = ref }}></div>
                 </CardContent>
               </Collapse>
             </Card>

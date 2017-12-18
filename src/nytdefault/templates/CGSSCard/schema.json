@@ -1,121 +1,163 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "カード情報",
-  "type": "object",
-  "properties": {
-    "cardname": {
-      "title": "カード名",
-      "type": "string"
-    },
-    "idolname": {
-      "title": "アイドル名",
-      "type": "string"
-    },
-    "skill": {
-      "title": "能力",
-      "type": "object",
-      "properties": {
-        "center": {
-          "title": "センター",
-          "type": "object",
-          "properties": {
-            "name": {
-              "title": "名前",
-              "type": "string"
-            },
-            "effect": {
-              "title": "効果",
-              "type": "string"
-            }
-          }
-        },
-        "ability": {
-          "title": "特技",
-          "type": "object",
-          "properties": {
-            "name": {
-              "title": "名前",
-              "type": "string"
-            },
-            "effect": {
-              "title": "効果",
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "before": {
-      "title": "特訓前",
-      "type": "object",
-      "properties": {
-        "rarity": {
-          "title": "レア度",
-          "type": "string"
-        },
-        "image": {
-          "title": "画像",
-          "type": "string"
-        },
-        "stats": {
-          "title": "ステータス",
-          "type": "object",
-          "properties": {
-            "life": {
-              "title": "ライフ",
-              "type": "number"
-            },
-            "vocal": {
-              "title": "ボーカル",
-              "type": "number"
-            },
-            "dance": {
-              "title": "ダンス",
-              "type": "number"
-            },
-            "visual": {
-              "title": "ビジュアル",
-              "type": "number"
-            }
-          }
-        }
-      }
-    },
-    "after": {
-      "title": "特訓後",
-      "type": "object",
-      "properties": {
-        "rarity": {
-          "title": "レア度",
-          "type": "string"
-        },
-        "image": {
-          "title": "画像",
-          "type": "string"
-        },
-        "stats": {
-          "title": "ステータス",
-          "type": "object",
-          "properties": {
-            "life": {
-              "title": "ライフ",
-              "type": "number"
-            },
-            "vocal": {
-              "title": "ボーカル",
-              "type": "number"
-            },
-            "dance": {
-              "title": "ダンス",
-              "type": "number"
-            },
-            "visual": {
-              "title": "ビジュアル",
-              "type": "number"
-            }
-          }
-        }
-      }
-    }
-  }
+	"schema": "http://json-schema.org/draft-04/schema#",
+	"title": "カード情報",
+	"type": "object",
+	"properties": {
+		"cardname": {
+			"title": "カード名",
+			"type": "string"
+		},
+		"idolname": {
+			"title": "アイドル名",
+			"type": "string"
+		},
+		"skill": {
+			"title": "能力",
+			"type": "object",
+			"properties": {
+				"center": {
+					"title": "センター",
+					"type": "object",
+					"properties": {
+						"name": {
+							"title": "名前",
+							"type": "string"
+						},
+						"effect": {
+							"title": "効果",
+							"type": "string"
+						}
+					}
+				},
+				"ability": {
+					"title": "特技",
+					"type": "object",
+					"properties": {
+						"name": {
+							"title": "名前",
+							"type": "string"
+						},
+						"effect": {
+							"title": "効果",
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"before": {
+			"title": "特訓前",
+			"type": "object",
+			"properties": {
+				"rarity": {
+					"title": "レア度",
+					"type": "string"
+				},
+				"image": {
+					"title": "画像",
+					"type": "string"
+				},
+				"stats": {
+					"title": "ステータス",
+					"type": "object",
+					"properties": {
+						"life": {
+							"title": "ライフ",
+							"type": "number"
+						},
+						"vocal": {
+							"title": "ボーカル",
+							"type": "number"
+						},
+						"dance": {
+							"title": "ダンス",
+							"type": "number"
+						},
+						"visual": {
+							"title": "ビジュアル",
+							"type": "number"
+						}
+					}
+				},
+				"lines": {
+					"title": "セリフ",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"scene": {
+								"title": "場面",
+								"type": "string"
+							},
+							"line": {
+								"title": "セリフ",
+								"type": "string"
+							},
+							"remark": {
+								"title": "備考",
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		},
+		"after": {
+			"title": "特訓後",
+			"type": "object",
+			"properties": {
+				"rarity": {
+					"title": "レア度",
+					"type": "string"
+				},
+				"image": {
+					"title": "画像",
+					"type": "string"
+				},
+				"stats": {
+					"title": "ステータス",
+					"type": "object",
+					"properties": {
+						"life": {
+							"title": "ライフ",
+							"type": "number"
+						},
+						"vocal": {
+							"title": "ボーカル",
+							"type": "number"
+						},
+						"dance": {
+							"title": "ダンス",
+							"type": "number"
+						},
+						"visual": {
+							"title": "ビジュアル",
+							"type": "number"
+						}
+					}
+				},
+				"lines": {
+					"title": "セリフ",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"scene": {
+								"title": "場面",
+								"type": "string"
+							},
+							"line": {
+								"title": "セリフ",
+								"type": "string"
+							},
+							"remark": {
+								"title": "備考",
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
